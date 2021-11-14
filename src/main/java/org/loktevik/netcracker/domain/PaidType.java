@@ -10,13 +10,13 @@ public class PaidType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String name;
 
     @ManyToMany(mappedBy = "paidTypes")
     private List<Customer> customers = new ArrayList<>();
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

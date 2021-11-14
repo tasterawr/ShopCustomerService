@@ -7,14 +7,16 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface PaidTypeRepository extends CrudRepository<PaidType, Integer> {
+public interface PaidTypeRepository extends CrudRepository<PaidType, Long> {
     PaidType save(PaidType paidType);
 
-    PaidType getById(Integer id);
+    PaidType getById(Long id);
 
-    List<PaidType> getAll();
+    List<PaidType> findByCustomers_Id(Long id);
 
-    void deleteById(Integer id);
+    List<PaidType> findAll();
+
+    void deleteById(Long id);
 
     void delete(PaidType paidType);
 }

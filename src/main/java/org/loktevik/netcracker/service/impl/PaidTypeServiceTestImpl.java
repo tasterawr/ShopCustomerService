@@ -27,7 +27,7 @@ public class PaidTypeServiceTestImpl implements PaidTypeService {
     }
 
     @Override
-    public PaidType getById(Integer id) {
+    public PaidType getById(Long id) {
         PaidType paidType = paidTypes.stream()
                 .filter(pType -> pType.getId().equals(id))
                 .findFirst()
@@ -36,12 +36,17 @@ public class PaidTypeServiceTestImpl implements PaidTypeService {
     }
 
     @Override
+    public List<PaidType> findByCustomers_Id(Long id) {
+        return null;
+    }
+
+    @Override
     public List<PaidType> getAllPaidTypes() {
         return paidTypes;
     }
 
     @Override
-    public void deleteById(Integer id) {
+    public void deleteById(Long id) {
         PaidType paidType = getById(id);
         delete(paidType);
     }

@@ -8,12 +8,12 @@ public class Address {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String city;
     private String state;
     private String country;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 

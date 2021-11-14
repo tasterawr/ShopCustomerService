@@ -3,6 +3,7 @@ package org.loktevik.netcracker.domain;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name="customers")
@@ -10,7 +11,7 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Integer id;
+    private Long id;
     private String firstName;
     private String lastName;
     private String email;
@@ -29,8 +30,12 @@ public class Customer {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    public Integer getId() {
+    public Long getId() {
         return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getFirstName() {
@@ -79,5 +84,21 @@ public class Customer {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Customer customer = (Customer) o;
+        return Objects.equals(id, customer.id) && Objects.equals(firstName, customer.firstName)
+                && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email)
+                && Objects.equals(password, customer.password) && Objects.equals(phone, customer.phone)
+                && Objects.equals(paidTypes, customer.paidTypes) && Objects.equals(address, customer.address);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, firstName, lastName, email, password, phone, paidTypes, address);
     }
 }

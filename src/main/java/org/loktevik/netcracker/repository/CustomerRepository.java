@@ -1,20 +1,22 @@
 package org.loktevik.netcracker.repository;
 
 import org.loktevik.netcracker.domain.Customer;
+import org.loktevik.netcracker.domain.PaidType;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
-public interface CustomerRepository extends CrudRepository<Customer, Integer> {
+public interface CustomerRepository extends CrudRepository<Customer, Long> {
+
     Customer save(Customer customer);
 
-    Customer getById(Integer id);
+    Customer getById(Long id);
 
-    List<Customer> getAll();
+    List<Customer> findAll();
 
-    void deleteById(Integer id);
+    void deleteById(Long id);
 
     void delete(Customer customer);
 }
