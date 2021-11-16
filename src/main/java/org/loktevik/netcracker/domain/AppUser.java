@@ -3,16 +3,16 @@ package org.loktevik.netcracker.domain;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
-@Entity
-@Table(name="addresses")
 @Data
-public class Address {
-
+public class AppUser {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String city;
-    private String state;
-    private String country;
+    private String username;
+    private String password;
+
+    @ManyToMany(fetch = FetchType.EAGER)
+    private List<Role> roles;
 }

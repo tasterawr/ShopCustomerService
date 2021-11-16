@@ -1,5 +1,6 @@
 package org.loktevik.netcracker.rest;
 
+import lombok.RequiredArgsConstructor;
 import org.loktevik.netcracker.domain.Customer;
 import org.loktevik.netcracker.domain.PaidType;
 import org.loktevik.netcracker.service.CustomerService;
@@ -14,12 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("customers")
 public class CustomerController {
-    @Autowired
     CustomerService customerService;
-
-    @Autowired
     PaidTypeService paidTypeService;
 
     @GetMapping(value="{id}", produces = MediaType.APPLICATION_JSON_VALUE)
