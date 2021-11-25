@@ -1,12 +1,16 @@
 package org.loktevik.netcracker.service.impl;
 
+import lombok.RequiredArgsConstructor;
 import org.loktevik.netcracker.domain.Customer;
 import org.loktevik.netcracker.repository.CustomerRepository;
 import org.loktevik.netcracker.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+@Service
+@RequiredArgsConstructor
 public class CustomerServiceImpl implements CustomerService {
     @Autowired
     CustomerRepository customerRepo;

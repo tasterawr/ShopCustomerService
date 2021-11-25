@@ -33,7 +33,7 @@ public class UserController {
 
     @PostMapping("users/save")
     public ResponseEntity<AppUser> saveUser(@RequestBody AppUser user){
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("roles/save").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("users/save").toUriString());
         HttpHeaders headers = new HttpHeaders();
 
         headers.setLocation(uri);

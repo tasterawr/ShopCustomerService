@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("paidTypes")
+@RequestMapping("paidtype")
 public class PaidTypeController {
     @Autowired
     PaidTypeService paidTypeService;
@@ -77,5 +77,7 @@ public class PaidTypeController {
         paidTypeService.delete(paidType);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+
 }
 

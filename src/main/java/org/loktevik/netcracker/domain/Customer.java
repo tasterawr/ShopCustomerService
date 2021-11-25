@@ -1,15 +1,16 @@
 package org.loktevik.netcracker.domain;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 @Entity
 @Table(name="customers")
 @Data
+@EqualsAndHashCode
 public class Customer {
 
     @Id
@@ -18,8 +19,11 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
     private String phone;
+
+    @OneToOne(cascade = {CascadeType.ALL})
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private AppUser user;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -33,19 +37,4 @@ public class Customer {
     @JoinColumn(name = "address_id", referencedColumnName = "id")
     private Address address;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Customer customer = (Customer) o;
-        return Objects.equals(id, customer.id) && Objects.equals(firstName, customer.firstName)
-                && Objects.equals(lastName, customer.lastName) && Objects.equals(email, customer.email)
-                && Objects.equals(password, customer.password) && Objects.equals(phone, customer.phone)
-                && Objects.equals(paidTypes, customer.paidTypes) && Objects.equals(address, customer.address);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, firstName, lastName, email, password, phone, paidTypes, address);
-    }
 }
