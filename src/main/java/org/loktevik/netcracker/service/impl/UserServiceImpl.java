@@ -8,6 +8,7 @@ import org.loktevik.netcracker.repository.RoleRepository;
 import org.loktevik.netcracker.repository.UserRepository;
 import org.loktevik.netcracker.service.UserService;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -79,21 +80,29 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public AppUser getByUsername(String username) {
-        return null;
+        return userRepository.getByUsername(username);
     }
 
     @Override
     public AppUser getById(Long id) {
-        return null;
+        return userRepository.getById(id);
     }
 
     @Override
     public List<Role> getUserRoles(String username) {
-        return null;
+        AppUser user = getByUsername(username);
+        return user.getRoles();
     }
 
     @Override
     public List<Role> getUserRoles(Long id) {
-        return null;
+        AppUser user = getById(id);
+        return user.getRoles();
+    }
+
+    @Override
+    public void deleteUser() {
+        AppUser user = userRepository.getByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        userRepository.delete(user);
     }
 }

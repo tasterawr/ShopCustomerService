@@ -1,11 +1,8 @@
-package org.loktevik.netcracker.rest;
+package org.loktevik.netcracker.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.loktevik.netcracker.domain.Address;
-import org.loktevik.netcracker.domain.Customer;
-import org.loktevik.netcracker.domain.PaidType;
 import org.loktevik.netcracker.service.AddressService;
-import org.loktevik.netcracker.service.PaidTypeService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,8 +14,8 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("addresses")
-public class AddressController {
+@RequestMapping("admin/addresses")
+public class AddressRestController {
     private final AddressService addressService;
     RestTemplate restTemplate = new RestTemplate();
 

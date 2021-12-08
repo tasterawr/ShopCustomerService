@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 public class PaidTypeServiceTestImpl implements PaidTypeService {
     private List<PaidType> paidTypes = new ArrayList<>(){
         {
@@ -36,6 +35,11 @@ public class PaidTypeServiceTestImpl implements PaidTypeService {
     }
 
     @Override
+    public PaidType getByName(String name) {
+        return null;
+    }
+
+    @Override
     public List<PaidType> findByCustomers_Id(Long id) {
         return null;
     }
@@ -46,13 +50,14 @@ public class PaidTypeServiceTestImpl implements PaidTypeService {
     }
 
     @Override
-    public void deleteById(Long id) {
-        PaidType paidType = getById(id);
-        delete(paidType);
+    public Long[] getCustomerPaidtypes() {
+        return new Long[0];
     }
 
     @Override
-    public void delete(PaidType paidType) {
+    public void deleteById(Long id) {
+        PaidType paidType = getById(id);
         paidTypes.remove(paidType);
     }
+
 }

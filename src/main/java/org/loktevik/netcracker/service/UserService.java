@@ -24,4 +24,6 @@ public interface UserService {
     List<Role> getUserRoles(String username);
 
     List<Role> getUserRoles(Long id);
+
+    void deleteUser();
 }

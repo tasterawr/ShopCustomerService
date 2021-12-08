@@ -34,6 +34,11 @@ public class CustomerServiceTestImpl implements CustomerService {
     }
 
     @Override
+    public Customer getCustomerByUsername(String username) {
+        return null;
+    }
+
+    @Override
     public Customer getById(Long id) {
         Customer customer = customers.stream()
                 .filter(c -> c.getId().equals(id))
@@ -48,7 +53,7 @@ public class CustomerServiceTestImpl implements CustomerService {
     }
 
     @Override
-    public void updateCustomer(Customer customer) {
+    public void updateCustomer(String parameter, String newValue) {
 
     }
 
