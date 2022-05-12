@@ -2,6 +2,7 @@ package org.loktevik.netcracker.controllers.rest;
 
 import lombok.RequiredArgsConstructor;
 import org.json.JSONObject;
+import org.loktevik.netcracker.controllers.rest.utils.URLProvider;
 import org.loktevik.netcracker.domain.Address;
 import org.loktevik.netcracker.domain.AppUser;
 import org.loktevik.netcracker.domain.Customer;
@@ -17,7 +18,6 @@ import org.springframework.web.client.RestTemplate;
 import org.loktevik.netcracker.controllers.rest.dto.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -48,6 +48,7 @@ public class CustomerRestController {
                 SecurityContextHolder.getContext().getAuthentication().getName());
 
         CustomerInfo info = new CustomerInfo();
+        info.setId(customer.getId().toString());
         info.setFirstName(customer.getFirstName());
         info.setLastName(customer.getLastName());
         info.setEmail(customer.getEmail());
@@ -91,33 +92,72 @@ public class CustomerRestController {
 
     @GetMapping(value = "/offers", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<OffersResponseBody> getOffers(HttpServletRequest request) throws URISyntaxException {
-        JSONObject jsonObject = new JSONObject().put("paidtypesIds", paidTypeService.getCustomerPaidtypes());
-        HttpEntity<String> nextRequest = new HttpEntity<>(jsonObject.toString(), formHeadersWithAuth(request));
+        CustomerPaidTypes paidTypes = new CustomerPaidTypes();
+        paidTypes.setPaidtypeIds(paidTypeService.getCustomerPaidtypesIds());
+        HttpEntity<CustomerPaidTypes> nextRequest = new HttpEntity<>(paidTypes, formHeadersWithAuth(request));
 
-        String url = "http://localhost:8082/offers/full-info";
-        return restTemplate.postForEntity(url, nextRequest, OffersResponseBody.class);
+        String url = URLProvider.getOfferServiceUrl() + "/offers/full-info";
+        ResponseEntity<OffersResponseBody> response = restTemplate.postForEntity(url, nextRequest, OffersResponseBody.class);
+        Arrays.stream(response.getBody().getOffers()).forEach(offer -> {
+            offer.setPaidType(paidTypeService.getById(Long.parseLong(offer.getPaidType())).getName());
+        });
+        return response;
+    }
+
+    @GetMapping(value = "/offer/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public OfferDto getOffer(HttpServletRequest request, @PathVariable String id){
+        String url = URLProvider.getOfferServiceUrl() + String.format("/offers/%s", id);
+        ResponseEntity<OfferDto> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<>(formHeadersWithAuth(request)), OfferDto.class);
+        response.getBody().setPaidType(paidTypeService.getById(Long.parseLong(response.getBody().getPaidType())).getName());
+
+        return response.getBody();
     }
 
     @PostMapping(value = "/orders", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> createOrder(HttpServletRequest request, @RequestBody OrderInfo orderInfo){
+    public ResponseEntity<?> createOrder(HttpServletRequest request, @RequestBody OrderDto orderInfo){
         Long customerId = customerService.getCustomerByUsername(SecurityContextHolder.getContext().getAuthentication().getName()).getId();
         JSONObject jsonObject = new JSONObject()
                 .put("offerId", orderInfo.getOfferId())
                 .put("amount", orderInfo.getAmount());
         HttpEntity<String> nextRequest = new HttpEntity<>(jsonObject.toString(), formHeadersWithAuth(request));
 
-        String url = String.format("http://localhost:8081/orders/customer/%d/new-order", customerId);
+        String url = URLProvider.getOrderServiceUrl() + String.format("/orders/customer/%d/new-order", customerId);
         restTemplate.postForEntity(url, nextRequest, Object.class);
-//        ResponseEntity<OffersResponseBody> response = restTemplate.exchange(RequestEntity.get(new URI(url)).headers(headers).build(), OffersResponseBody.class);
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @GetMapping(value="{id}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Order>> getOrders(@PathVariable("id") Long id){
-        String uri = String.format("http://localhost:8081/orders?userId=%d", id);
-        List<Order> orders = restTemplate.getForObject(uri, List.class);
+    @PostMapping("/order/{id}/delete")
+    public ResponseEntity<?> deleteOrder(HttpServletRequest request, @PathVariable("id") String id){
+        String url = URLProvider.getOrderServiceUrl() + String.format("/orders/%s", id);
 
-        return new ResponseEntity<>(orders, HttpStatus.OK);
+        restTemplate.exchange(url, HttpMethod.DELETE, new HttpEntity<>(formHeadersWithAuth(request)), OrderDto.class);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @GetMapping(value="{id}/orders", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<CustomerOrdersDto> getOrders(HttpServletRequest request, @PathVariable("id") String id){
+        String url = URLProvider.getOrderServiceUrl() + String.format("/orders/customer/%s", id);
+
+        return restTemplate.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(formHeadersWithAuth(request)), CustomerOrdersDto.class
+        );
+    }
+
+    @GetMapping(value="/order/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OrderDto> getOrder(HttpServletRequest request, @PathVariable("id") String id){
+        String url = URLProvider.getOrderServiceUrl() + String.format("/orders/%s", id);
+
+
+        return restTemplate.exchange(
+                url, HttpMethod.GET, new HttpEntity<>(formHeadersWithAuth(request)), OrderDto.class
+        );
+    }
+
+    @PostMapping(value="/order/{id}/pay", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<OrderDto> setOrderPaid(HttpServletRequest request, @PathVariable("id") String id){
+        String url = URLProvider.getOrderServiceUrl() + String.format("/orders/%s/pay", id);
+
+        return restTemplate.postForEntity(url, new HttpEntity<>(formHeadersWithAuth(request)), OrderDto.class);
     }
 
     @GetMapping(value = "{id}/paidtypes", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -194,4 +234,3 @@ public class CustomerRestController {
         customerService.delete(customer);
     }
 }
-

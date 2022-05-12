@@ -12,6 +12,10 @@ import java.util.List;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     Customer findCustomerByUserUsername(String username);
 
+    Customer findCustomerByPhone(String phone);
+
+    Customer findCustomerByEmail(String email);
+
     Customer save(Customer customer);
 
     Customer getById(Long id);

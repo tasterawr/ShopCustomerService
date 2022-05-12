@@ -25,6 +25,7 @@ public class AuthorizationFilter extends OncePerRequestFilter {
         } else if (request.getContextPath().equals("/sign-in")){
             filterChain.doFilter(request, response);
         } else {
+            System.out.println("REQUEST ATTEMPT");
             String authToken = request.getParameter("access_token");
             String authorizationHeader = request.getHeader(AUTHORIZATION);
             if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ") || (authToken != null)){

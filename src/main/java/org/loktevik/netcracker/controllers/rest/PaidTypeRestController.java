@@ -17,6 +17,7 @@ public class PaidTypeRestController {
 
     @GetMapping
     public List<PaidTypeDto> getPaidTypes(){
+        System.out.println("PAIDTYPE mapping");
         List<PaidType> paidTypes =  paidTypeService.getAllPaidTypes();
         List<PaidTypeDto> paidTypeDtos = new ArrayList<>();
         paidTypes.forEach(pt ->

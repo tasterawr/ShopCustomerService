@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class OffersResponseBody {
-    private Offer[] offers;
+    private OfferDto[] offers;
     private Category[] categories;
 }

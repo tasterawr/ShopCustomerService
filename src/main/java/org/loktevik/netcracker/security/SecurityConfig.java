@@ -61,20 +61,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/admin/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().antMatchers("/api/**", "/addresses/**", "/paidtypes/**").hasAnyAuthority("ADMIN");
         http.authorizeRequests().anyRequest().authenticated();
-//                .and()
-//                .formLogin()
-//                .loginPage("/login")
-//                .failureUrl("/login?error")
-//                .loginProcessingUrl("/login/pass")
-//                .defaultSuccessUrl("/home", true)
-//                .permitAll()
-//                .successHandler(new AuthenticationSuccessHandler() {
-//                    @Override
-//                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-//                                                        Authentication authentication) throws IOException{
-//                        redirectStrategy.sendRedirect(request, response, "/home");
-//                    }
-//                });
         http.addFilter(authenticationFilter);
         http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }

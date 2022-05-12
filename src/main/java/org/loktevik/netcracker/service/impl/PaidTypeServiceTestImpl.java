@@ -50,7 +50,7 @@ public class PaidTypeServiceTestImpl implements PaidTypeService {
     }
 
     @Override
-    public Long[] getCustomerPaidtypes() {
+    public Long[] getCustomerPaidtypesIds() {
         return new Long[0];
     }
 
