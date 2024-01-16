@@ -1,0 +1,35 @@
+version: "3.8"
+services:
+  customer-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      db-url: jdbc:postgresql://customer-db:5432/CUSTOMER_SERVICE_DB
+      db-username: root
+      db-password: root
+    depends_on:
+      - customer-db
+    ports:
+      - "8081:8081"
+    networks:
+      - clientservice_default
+    restart: always
+
+  customer-db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: CUSTOMER_SERVICE_DB
+    volumes:
+      - ./db-init-scripts:/docker-entrypoint-initdb.d
+    restart: always
+    networks:
+      - clientservice_default
+
+networks:
+  clientservice_default:
+    external: true
